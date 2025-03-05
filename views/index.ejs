@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DocV Iframe</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        iframe {
+            width: 430px;
+            height: 80vh;
+            border: 1px solid #ccc;
+        }
+        button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 200px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <iframe id="docvIframe" src="<%= iframeUrl %>" sandbox="allow-scripts allow-same-origin" allowfullscreen></iframe>
+    <button onclick="generateDocVUrl()">Generate DocV URL</button>
+
+    <script>
+        async function generateDocVUrl() {
+            try {
+                const response = await fetch('/generate-url', { 
+                    method: 'POST',
+                    headers: {
+                        'User-Agent': navigator.userAgent // Send mobile user-agent
+                    }
+                });
+                const data = await response.json();
+                if (data.url) {
+                    document.getElementById('docvIframe').src = data.url;
+                } else {
+                    alert('Failed to fetch URL');
+                }
+            } catch (error) {
+                console.error('Error generating URL:', error);
+            }
+        }
+    </script>
+
+</body>
+</html>
